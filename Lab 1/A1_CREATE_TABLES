@@ -28,7 +28,7 @@ CREATE TABLE ATTEMPTS (
     _year INT NOT NULL CHECK (_year >= 2000),
     term INT NOT NULL CHECK (term IN (1,2)),
     grade INT,
-    PRIMARY KEY (studentID, courseID, term),
+    PRIMARY KEY (studentID, courseID, term, _year),
     FOREIGN KEY (studentID) REFERENCES STUDENT(studentID),
     FOREIGN KEY (courseID) REFERENCES COURSE(courseID)
 );
