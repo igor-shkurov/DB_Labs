@@ -1,0 +1,27 @@
+--
+INSERT INTO _PROGRAM(programID, _name, requiredCPs) 
+VALUES 	(1, 'Information Engineering', 120),
+		(2, 'Renewable Energies', 110);
+--
+INSERT INTO STUDENT(studentID, firstName, lastName, dob, programID)
+VALUES 	(123456, 'John', 'Wayne', '11-05-1998', 1),
+		(234567, 'Anna', 'Meyer', '13-02-1999', 1);
+--
+INSERT INTO COURSE(courseID, _name, description, creditPoints, programID)
+VALUES  (4, 'MA1', 'Mathematics 1', 8, 1),
+		(9, 'MA2', 'Mathematics 2', 8, 1),
+		(13, 'SS1', 'Signals and Systems 1', 6, 1),
+		(15, 'DB', 'Databases 1', 6, 1);
+--
+INSERT INTO ATTEMPTS(studentID, courseID, _year, term, grade)
+VALUES 	(123456, 4, 2021, 1, 7),
+		(234567, 9, 2021, 2, 9),
+		(234567, 13, 2021, 1, 3),
+		(234567, 13, 2021, 2, 6);
+--
+INSERT INTO PREREQUISITE(advancedCourseID, prerequisiteCourseID)
+VALUES 	(9, 4),
+		(13, 9),
+		(13, 4);
+--
+-- TRUNCATE TABLE _PROGRAM CASCADE;

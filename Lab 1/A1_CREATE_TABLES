@@ -1,0 +1,42 @@
+CREATE TABLE _PROGRAM (
+    programID SERIAL PRIMARY KEY,
+    _name VARCHAR(100) NOT NULL UNIQUE,
+    requiredCPs INT NOT NULL CHECK (requiredCPs > 0)
+);
+
+CREATE TABLE STUDENT (
+    studentID SERIAL PRIMARY KEY,
+    firstName VARCHAR(50) NOT NULL,
+    lastName VARCHAR(50) NOT NULL,
+    dob DATE NOT NULL,
+    programID INT,
+    FOREIGN KEY (programID) REFERENCES _PROGRAM(programID)
+);
+
+CREATE TABLE COURSE (
+    courseID SERIAL PRIMARY KEY,
+    _name VARCHAR(5) NOT NULL,
+    description TEXT,
+    creditPoints INT NOT NULL CHECK (creditPoints > 0),
+    programID INT,
+    FOREIGN KEY (programID) REFERENCES _PROGRAM(programID)
+);
+
+CREATE TABLE ATTEMPTS (
+    studentID INT,
+    courseID INT,
+    _year INT NOT NULL CHECK (_year >= 2000),
+    term INT NOT NULL CHECK (term IN (1,2)),
+    grade INT,
+    PRIMARY KEY (studentID, courseID, term),
+    FOREIGN KEY (studentID) REFERENCES STUDENT(studentID),
+    FOREIGN KEY (courseID) REFERENCES COURSE(courseID)
+);
+
+CREATE TABLE PREREQUISITE (
+    advancedCourseID INT,
+    prerequisiteCourseID INT,
+    PRIMARY KEY (advancedCourseID, prerequisiteCourseID),
+    FOREIGN KEY (advancedCourseID) REFERENCES COURSE(courseID),
+    FOREIGN KEY (prerequisiteCourseID) REFERENCES COURSE(courseID)
+);

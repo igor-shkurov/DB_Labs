@@ -1,0 +1,31 @@
+-- 1
+SELECT s.dob FROM sailor s
+JOIN hire h ON h.sailorID = s.sailorID
+WHERE h.startofservice = '03-08-2012'
+ORDER BY s.dob DESC;
+-- 2
+SELECT * FROM sailor s
+JOIN hire h ON h.sailorID = s.sailorID
+WHERE h.startofservice < '03-09-2012' AND h.startofservice > '03-07-2011'
+AND s.lastname LIKE 'J%';
+-- 3
+SELECT s.name, SUM(h.annualsalary) AS "Ship total salary" FROM ship s
+JOIN hire h ON s.shipid = h.shipid
+JOIN sailor sr ON h.sailorid = sr.sailorid
+GROUP BY s.shipid;
+-- 4
+SELECT h.location FROM harbour h
+LEFT JOIN ship s ON s.baseharbour = h.harbourid
+WHERE s.shipid IS NULL
+-- 5
+SELECT s.name, s.shipid, COUNT(h.sailorid) AS "Number of sailors" FROM ship s
+JOIN hire h ON h.shipid = s.shipid
+WHERE h.annualsalary <= 42000
+GROUP BY s.name, s.shipid
+-- *
+SELECT DISTINCT h1.location FROM SHIP s1, SHIP s2, HARBOUR h1, HARBOUR h2
+WHERE s1.baseHarbour = h1.harbourID
+AND s2.baseHarbour = h2.harbourID
+AND s1.launchDate = s2.launchDate
+AND h1.location = h2.location
+AND h1.harbourID != h2.harbourID;

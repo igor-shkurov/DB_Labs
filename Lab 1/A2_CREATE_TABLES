@@ -1,0 +1,81 @@
+CREATE TABLE Harbour
+  (harbourID INT NOT NULL,
+   location VARCHAR(32) NOT NULL,
+   establishedIn date,
+   PRIMARY KEY (harbourID) ); 
+   
+CREATE TABLE Sailor
+  (sailorID INT NOT NULL,
+   lastName VARCHAR(32),
+   dob date,
+   trainedAt INT,
+   primary key (sailorID),
+   foreign key (trainedAT) references Harbour(harbourID));
+
+CREATE TABLE Ship
+  (shipID INT NOT NULL,
+   name VARCHAR(32),
+   grossWeight INT,
+   launchDate date,
+   baseHarbour INT,
+   primary key (shipID),
+   foreign key (baseHarbour) references Harbour(harbourID));
+   
+CREATE TABLE hire
+  (sailorID INT NOT NULL,
+  shipID INT NOT NULL,
+   startOfService date,
+   annualSalary INT,
+   primary key (sailorID, shipID),
+   foreign key (sailorID) references Sailor(sailorID),
+   foreign key (shipID) references ship(shipID));
+
+
+INSERT INTO Harbour
+VALUES ( 123, 'Hamburg','1189-01-01'); 
+
+INSERT INTO Harbour
+VALUES ( 234, 'Amsterdam','1200-01-01'); 
+
+INSERT INTO Harbour
+VALUES ( 345, 'Rotterdam','1898-01-01');
+
+INSERT INTO Sailor
+VALUES ( 12, 'Meyer','2002-02-03', 123);
+
+INSERT INTO Sailor
+VALUES ( 13, 'Smith','2005-02-03', 123);
+
+INSERT INTO Sailor
+VALUES ( 14, 'Jones','2012-02-08', 123);
+
+INSERT INTO Sailor
+VALUES ( 18, 'James','2015-02-08', 123);
+
+INSERT INTO Sailor
+VALUES ( 15, 'Ranger','2022-02-03', 234);
+
+-- Weight in weight ton
+INSERT INTO Ship
+VALUES ( 45, 'Ship1',53.800, '2007-02-03',  123);
+
+INSERT INTO Ship
+VALUES ( 46, 'Ship2',55.800, '2015-02-03',  123);
+
+INSERT INTO Ship
+VALUES ( 47, 'Ship3',51.800, '2018-08-03',  234);
+
+INSERT INTO Hire
+VALUES ( 12, 45, '2010-08-03',  45000);
+
+INSERT INTO Hire
+VALUES ( 13, 45, '2012-08-03',  47000);
+
+INSERT INTO Hire
+VALUES ( 14, 45, '2012-08-03',  42000);
+
+INSERT INTO Hire
+VALUES ( 15, 47, '2012-08-03',  41000);
+
+INSERT INTO Hire
+VALUES ( 18, 46, '2011-08-03',  40500);

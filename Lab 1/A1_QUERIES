@@ -1,0 +1,22 @@
+-- 1
+SELECT s.firstName, s.lastName FROM STUDENT s
+JOIN _PROGRAM _p ON s.programID = _p.programID
+WHERE _p._name LIKE 'Information Engineering';
+-- 2
+SELECT DISTINCT _c._name FROM COURSE _c
+JOIN PREREQUISITE _p ON _c.courseID = _p.advancedCourseID;
+-- 3
+SELECT SUM(_c.creditPoints) FROM COURSE _c
+JOIN ATTEMPTS _a ON _a.courseID = _c.courseID
+JOIN STUDENT s ON s.studentID = _a.studentID
+WHERE s.firstName LIKE 'John' AND s.lastName LIKE 'Wayne' AND _a.grade > 5
+-- 4
+WITH getStudent AS (
+	SELECT * FROM STUDENT s
+   	WHERE s.firstName LIKE 'John' AND s.lastName LIKE 'Wayne')
+DELETE FROM ATTEMPTS _a
+USING getStudent
+WHERE _a.studentID = getStudent.studentID;
+
+DELETE FROM STUDENT s
+WHERE s.firstName LIKE 'John' AND s.lastName LIKE 'Wayne'
