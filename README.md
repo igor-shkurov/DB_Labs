@@ -157,7 +157,7 @@ WHERE s.firstName LIKE 'John' AND s.lastName LIKE 'Wayne'
 
 ## Assignment 2
 
-We created the tables using the script from Moodle.
+<div style="text-align: left">We created the tables using the script from Moodle.</div>
 
 > 1. Create a SQL-query that returns the dob (date of birth) of sailors in descending order that were
 hired on August 3rd, 2012.
@@ -239,4 +239,162 @@ If executed line by line the result is as follows:
 3) The third condition dictates that the resulting records should have the same launch dates which leaves us with only 3 records.
 4) The fourth does nothing, since we already have the records with same locations for h1 and h2.
 5) The fifth presents no data, because there are no records satisfying this condition.
+</div>
 
+## Assignment 3
+
+We created the schema and filled it with the data provided
+
+> 1. Retrieve the names of all employees in department 5 who work more than 10 hours per week on a project.
+
+<div style="text-align: left">The query joins two tables and selects employees from the fifth department with 10+ hours on a project. Since some employees have multiple projects satisfying the criterion, the keyword DISTINCT was used:
+</div>
+
+```
+SELECT DISTINCT e.Fname, e.Lname FROM employee e
+JOIN works_on w ON w.Essn = e.Ssn
+WHERE e.Dno = 5 AND w.Hours > 10
+```
+
+> 2. List the names of all employees who have a dependent with the same first name as themselves.
+
+<div style="text-align: left">The query joins two tables and selects employees and compares first letters of their first names using LEFT function:
+</div>
+
+```
+SELECT e.Fname, e.Lname FROM employee e
+JOIN dependent d ON d.Essn = e.Ssn
+WHERE LEFT(e.Fname, 1) = LEFT(d.Dependent_name, 1)
+```
+
+> 3. Find the names of all employees who are directly supervised by ‘Franklin Wong’.
+
+<div style="text-align: left">The query joins the CTE generated beforehand to retrieve manager's data:
+</div>
+
+```
+WITH getManager AS (
+	SELECT * FROM employee e
+	WHERE e.Fname LIKE 'Franklin' AND e.Lname LIKE 'Wong'
+)
+SELECT e.Fname, e.Lname FROM employee e
+JOIN getManager gm ON gm.Ssn = e.Super_ssn
+```
+
+> 4. Suppose that the EMPLOYEE table’s constraint EMPSUPERFK as specified below is changed to
+read as follows:
+
+```
+CONSTRAINT EMPSUPERFK FOREIGN KEY (Super_ssn) REFERENCES EMPLOYEE(Ssn) ON DELETE CASCADE ON UPDATE CASCADE;
+```
+
+> What happens when the following command is run on the database state?
+
+```
+DELETE FROM EMPLOYEE WHERE Lname = ‘Borg’;
+```
+
+<div style="text-align: left">
+• If this query executed on the database state, all employees having Borg as manager will be deleted.
+</div><br>
+
+> Is it better to CASCADE or SET NULL in case of EMPSUPERFK constraint ON DELETE?
+
+<div style="text-align: left">
+• CASCADE is an incorrect behaviour in this case, because removal of a manager should not affect other employees. Their manager ideally should be set to NULL until a new one is added.
+</div><br>
+
+> 5. For each project, list the project name and the total hours per week (by all employees) spent on
+that project.
+
+<div style="text-align: left"> The query joins two tables, groups records by project names and uses the SUM aggregate function to count hours spent.
+</div>
+
+```
+SELECT _p.Pname, SUM(w.Hours) FROM works_on w
+JOIN project _p ON _p.Pnumber = w.Pno
+GROUP BY _p.Pname
+```
+
+> 6. Retrieve the average salary of all female employees.
+
+<div style="text-align: left">The query fetches all female employees and applies the corresponding aggregate function to get the average salary.
+</div>
+
+```
+SELECT AVG(e.salary) AS "Average salary (F)" FROM employee e
+WHERE e.Sex LIKE 'F'
+```
+
+> 7. Write SQL statements to create a table EMPLOYEE_BACKUP to back up the EMPLOYEE table
+shown.
+
+<div style="text-align: left">The first query creates a table based on another keeping constraints but not saving data. Afterwards, data is to be inserted manually with a simple insert:
+</div>
+
+```
+CREATE TABLE EMPLOYEE_BACKUP (LIKE EMPLOYEE INCLUDING ALL);
+
+INSERT INTO EMPLOYEE_BACKUP
+SELECT * FROM EMPLOYEE;
+```
+
+> 8. For each department, whose average employee salary is more than $30,000, retrieve the depart-
+ment name and the number of employees working for that department.
+
+<div style="text-align: left">
+The query joins two tables, groups the data by department and displays only those having average salary more than $30,000 (result of the aggregate function applied previously):
+</div>
+
+```
+SELECT d.Dname, AVG(e.salary) AS "Average salary" FROM department d
+JOIN employee e ON e.Dno = d.Dnumber
+GROUP BY d.Dname
+HAVING AVG(e.salary) > 30000
+```
+
+## Assignment 4
+
+We created the schema and filled it with the sample data, since no sample data was provieded.
+
+> 1. Display a list of actors (first name, last name) and their roles in a specific movie (e.g., “FilmXYZ”).
+
+<div style="text-align: left">
+The query joins three tables and finds entries, for which the film title is specified as follows:
+</div>
+
+```
+SELECT _a.firstname, _a.lastname, mha.rolename FROM actors _a
+JOIN moviehasactor mha ON mha.actorid = _a.actorid
+JOIN movies _m ON _m.filmid = mha.filmid
+WHERE _m.title LIKE 'Inception'
+```
+
+> 2. Find all movies that will be shown in the screenings (ScreeningID) for the movie theater “HallA”
+on 2024-01-30 at 19:00.
+
+<div style="text-align: left">
+The query joins two tables and finds movies, which are shown at the specifed location, date and time:
+</div>
+
+```
+SELECT _m.title FROM screenings s
+JOIN movies _m ON _m.filmid = s.filmid
+WHERE cinemahall LIKE 'Hall A' AND date = '2024-01-30' AND time = '19:00'
+```
+
+> 3. Create a table with information about all reservations made by customers with the last name
+“Schmidt”, including the movie title and seat number.
+
+<div style="text-align: left">
+The query creates a table and uses the resulting data another query to fill it up.
+</div>
+
+
+```
+CREATE TABLE Schmidt_bookings AS
+SELECT _m.title, r.seat, r.customername FROM reservations r
+JOIN screenings s ON r.screeningid = s.screeningid
+JOIN movies _m ON s.filmid = _m.filmid
+WHERE r.customername LIKE '%Schmidt'
+```
