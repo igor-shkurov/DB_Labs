@@ -13,7 +13,8 @@ WHERE s.firstName LIKE 'John' AND s.lastName LIKE 'Wayne' AND _a.grade > 5
 -- 4
 WITH getStudent AS (
 	SELECT * FROM STUDENT s
-   	WHERE s.firstName LIKE 'John' AND s.lastName LIKE 'Wayne')
+   	WHERE s.firstName LIKE 'John' AND s.lastName LIKE 'Wayne'
+)
 DELETE FROM ATTEMPTS _a
 USING getStudent
 WHERE _a.studentID = getStudent.studentID;

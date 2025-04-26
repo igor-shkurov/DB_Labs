@@ -1,0 +1,15 @@
+-- 1
+SELECT _a.firstname, _a.lastname, mha.rolename FROM actors _a
+JOIN moviehasactor mha ON mha.actorid = _a.actorid
+JOIN movies _m ON _m.filmid = mha.filmid
+WHERE _m.title LIKE 'Inception'
+-- 2
+SELECT _m.title FROM screenings s
+JOIN movies _m ON _m.filmid = s.filmid
+WHERE cinemahall LIKE 'Hall A' AND date = '2024-01-30' AND time = '19:00'
+-- 3
+CREATE TABLE Schmidt_bookings AS
+SELECT _m.title, r.seat, r.customername FROM reservations r
+JOIN screenings s ON r.screeningid = s.screeningid
+JOIN movies _m ON s.filmid = _m.filmid
+WHERE r.customername LIKE '%Schmidt'

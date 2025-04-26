@@ -1,0 +1,78 @@
+-- MOVIES
+CREATE TABLE Movies (
+    FilmID SERIAL PRIMARY KEY,
+    Title VARCHAR(100),
+    Director VARCHAR(100),
+    ReleaseYear INT,
+    Genre VARCHAR(50)
+);
+
+-- ACTORS
+CREATE TABLE Actors (
+    ActorID SERIAL PRIMARY KEY,
+    FirstName VARCHAR(50),
+    LastName VARCHAR(50),
+    Birthdate DATE
+);
+
+-- MOVIEHASACTOR (Join table with role info)
+CREATE TABLE MovieHasActor (
+    MovieHasActorID SERIAL PRIMARY KEY,
+    FilmID INT REFERENCES Movies(FilmID),
+    ActorID INT REFERENCES Actors(ActorID),
+    RoleName VARCHAR(100)
+);
+
+-- SCREENINGS
+CREATE TABLE Screenings (
+    ScreeningID SERIAL PRIMARY KEY,
+    FilmID INT REFERENCES Movies(FilmID),
+    CinemaHall VARCHAR(50),
+    Date DATE,
+    Time TIME
+);
+
+-- RESERVATIONS
+CREATE TABLE Reservations (
+    ReservationID SERIAL PRIMARY KEY,
+    ScreeningID INT REFERENCES Screenings(ScreeningID),
+    Seat VARCHAR(10),
+    CustomerName VARCHAR(100),
+    BookingDate DATE
+);
+
+-- MOVIES
+INSERT INTO Movies (Title, Director, ReleaseYear, Genre) VALUES
+('Inception', 'Christopher Nolan', 2010, 'Sci-Fi'),
+('The Godfather', 'Francis Ford Coppola', 1972, 'Crime'),
+('Titanic', 'James Cameron', 1997, 'Romance');
+
+-- ACTORS
+INSERT INTO Actors (FirstName, LastName, Birthdate) VALUES
+('Leonardo', 'DiCaprio', '1974-11-11'),
+('Joseph', 'Gordon-Levitt', '1981-02-17'),
+('Marlon', 'Brando', '1924-04-03'),
+('Kate', 'Winslet', '1975-10-05'),
+('Al', 'Pacino', '1940-04-25');
+
+-- MOVIEHASACTOR
+INSERT INTO MovieHasActor (FilmID, ActorID, RoleName) VALUES
+(1, 1, 'Dom Cobb'),               -- Inception
+(1, 2, 'Arthur'),
+(2, 3, 'Vito Corleone'),          -- The Godfather
+(2, 5, 'Michael Corleone'),
+(3, 1, 'Jack Dawson'),            -- Titanic
+(3, 4, 'Rose Dewitt Bukater');
+
+-- SCREENINGS
+INSERT INTO Screenings (FilmID, CinemaHall, Date, Time) VALUES
+(1, 'Hall A', '2025-04-26', '18:30'),
+(2, 'Hall B', '2025-04-26', '20:00'),
+(3, 'Hall A', '2025-04-27', '17:00');
+
+-- RESERVATIONS
+INSERT INTO Reservations (ScreeningID, Seat, CustomerName, BookingDate) VALUES
+(1, 'A1', 'Alice Johnson', '2025-04-20'),
+(1, 'A2', 'Bob Smith', '2025-04-21'),
+(2, 'B1', 'Charlie Brown', '2025-04-22'),
+(3, 'A1', 'Dana White', '2025-04-23');
